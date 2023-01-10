@@ -1,0 +1,84 @@
+$main-width: 560px;
+
+.networkError {
+  width: $main-width;
+  margin: 24px auto;
+  color: #ff0000b3;
+  font-size: 18px;
+  text-align: center;
+}
+
+.content {
+  h1 {
+    font-size: 20px;
+    margin-bottom: 24px;
+  }
+
+  width: $main-width;
+  margin: 0 auto;
+  padding-top: 24px;
+
+  button {
+    padding: 0 24px;
+    line-height: 24px;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  // account info
+  .wrapAccount {
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+
+    .balance {
+      margin-bottom: 24px;
+    }
+  }
+
+  // input form
+  .wrapForm {
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    margin-top: 24px;
+
+    .wrapAccountInput {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      column-gap: 24px;
+      margin-bottom: 24px;
+
+      input {
+        height: 32px;
+        flex: 1;
+        padding-left: 1em;
+      }
+    }
+
+    .deployBtn {
+      display: inline-block;
+      width: 100%;
+      line-height: 32px;
+    }
+  }
+
+  // contract deployed
+  .wrapContract {
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    margin-top: 24px;
+
+    a {
+      text-decoration: underline;
+    }
+  }
+}
