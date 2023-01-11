@@ -19,11 +19,26 @@ export default function Home() {
   const { account, deactivate, chainId, library } = useEthers();
   const etherBalance = useEtherBalance(account);
   const chainMeta = useChainMeta(chainId || 1);
-  console.log(chainId);
 
   const [addressList, setAddressList] = useState<string[]>(["", "", ""]);
   const [contractAddr, setContractAddr] = useState("");
   const [deploying, setDeploying] = useState(false);
+
+  const getSupportChain = () => {
+    const readOnlyUrls = config.readOnlyUrls;
+    if (!readOnlyUrls) return "";
+
+    const chains = Object.values(readOnlyUrls);
+    const chainNames = chains.map((c) => {
+      if (!(typeof c === "string") && "_network" in c) {
+        return c._network.name === "homestead" ? "ethereum" : c._network.name;
+      } else {
+        return null;
+      }
+    });
+
+    return chainNames.join(" or ");
+  };
 
   const handlelDeploy = async () => {
     if (!(library instanceof providers.JsonRpcProvider)) {
@@ -44,11 +59,6 @@ export default function Home() {
       console.log("addressList:", addressList);
 
       const contract = await myContract.deploy(addressList);
-      // const contract = await myContract.deploy([
-      //   "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-      //   "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-      //   "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
-      // ]);
 
       console.log("contract:", contract);
       await contract.deployed();
@@ -68,7 +78,7 @@ export default function Home() {
   if (!chainId || !config.readOnlyUrls?.[chainId]) {
     return (
       <p className={styles.networkError}>
-        Please use either BSC Mainnet or BSC testnet.
+        Please use either {getSupportChain()} network.
       </p>
     );
   }
