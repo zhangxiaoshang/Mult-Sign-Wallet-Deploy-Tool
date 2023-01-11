@@ -9,8 +9,10 @@ import {
 } from "@usedapp/core";
 import { MetamaskConnect } from "../components/MetamaskConnect";
 
-import WalletSimpleABI from "../abis/WalletSimpleABI.json";
-import WalletSimpleBytecode from "../abis/WalletSimpleBytecode.json";
+import ForwarderArt from "../abis/Forwarder.json";
+import WalletSimpleArt from "../abis/WalletSimple.json";
+const WalletSimpleABI = WalletSimpleArt.abi;
+const WalletSimpleBytecode = WalletSimpleArt.bytecode;
 
 import styles from "./index.module.scss";
 
@@ -144,11 +146,7 @@ export default function Home() {
       {
         <div className={styles.wrapContract}>
           InitCodeHash:
-          <p>
-            {ethers.utils.keccak256(
-              utils.toUtf8Bytes(JSON.stringify(WalletSimpleBytecode))
-            )}
-          </p>
+          <p>{ethers.utils.keccak256(ForwarderArt.bytecode)}</p>
           <br />
           <p>
             Contract Address:{" "}
