@@ -11,7 +11,7 @@ const config: Config = {
     [BSCTestnet.chainId]: getDefaultProvider(
       process.env.NEXT_PUBLIC_BSC_TESTNET_RPC
     ),
-    // [BSC.chainId]: getDefaultProvider(process.env.NEXT_PUBLIC_BSC_RPC),
+    [BSC.chainId]: getDefaultProvider(process.env.NEXT_PUBLIC_BSC_RPC),
   },
 };
 

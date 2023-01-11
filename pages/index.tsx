@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Head from "next/head";
 import { utils, ContractFactory, providers, ethers } from "ethers";
 import {
   useEthers,
@@ -8,7 +9,8 @@ import {
 } from "@usedapp/core";
 import { MetamaskConnect } from "../components/MetamaskConnect";
 
-import WalletSimpleArt from "../abis/WalletSimple.json";
+import WalletSimpleABI from "../abis/WalletSimpleABI.json";
+import WalletSimpleBytecode from "../abis/WalletSimpleBytecode.json";
 
 import styles from "./index.module.scss";
 
@@ -17,6 +19,7 @@ export default function Home() {
   const { account, deactivate, chainId, library } = useEthers();
   const etherBalance = useEtherBalance(account);
   const chainMeta = useChainMeta(chainId || 1);
+  console.log(chainId);
 
   const [addressList, setAddressList] = useState<string[]>(["", "", ""]);
   const [contractAddr, setContractAddr] = useState("");
@@ -33,13 +36,19 @@ export default function Home() {
       const signer = library?.getSigner(account);
 
       const myContract = new ContractFactory(
-        WalletSimpleArt.abi,
-        WalletSimpleArt.bytecode,
+        WalletSimpleABI,
+        WalletSimpleBytecode,
         signer
       );
 
       console.log("addressList:", addressList);
+
       const contract = await myContract.deploy(addressList);
+      // const contract = await myContract.deploy([
+      //   "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      //   "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+      //   "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+      // ]);
 
       console.log("contract:", contract);
       await contract.deployed();
@@ -66,6 +75,10 @@ export default function Home() {
 
   return (
     <div className={styles.content}>
+      <Head>
+        <title>Mult-Sign-Wallet Contract Deploy Tool</title>
+      </Head>
+
       <h1>Mult-Sign-Wallet Contract Deploy Tool</h1>
 
       <div className={styles.wrapAccount}>
@@ -118,23 +131,31 @@ export default function Home() {
       </div>
 
       {/* deployed */}
-      {!!contractAddr && (
+      {
         <div className={styles.wrapContract}>
-          Contract Address:
+          InitCodeHash:
           <p>
-            <a
-              href={chainMeta.getExplorerAddressLink(contractAddr)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {contractAddr}
-            </a>
+            {ethers.utils.keccak256(
+              utils.toUtf8Bytes(JSON.stringify(WalletSimpleBytecode))
+            )}
           </p>
           <br />
-          InitCodeHash:
-          <p>{ethers.utils.keccak256(WalletSimpleArt.bytecode)}</p>
+          <p>
+            Contract Address:{" "}
+            {contractAddr ? (
+              <a
+                href={chainMeta.getExplorerAddressLink(contractAddr)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {contractAddr}
+              </a>
+            ) : (
+              "wait deploy"
+            )}
+          </p>
         </div>
-      )}
+      }
     </div>
   );
 }
